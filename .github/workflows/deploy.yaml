@@ -37,23 +37,25 @@ jobs:
           use_preset_export_path: true
           cache: true
 
-      - name: Stage the build into ./public for Pages
+      - name: Find the Godot export and stage as the Pages site root
         run: |
-          # The firebelley action exports to build/<preset_name>/ — our preset
-          # is "Web" so files land at build/Web/. Move everything into a flat
-          # ./public/ so Pages serves index.html at the site root.
-          mkdir -p public
           set -x
-          find build -maxdepth 3 -type d
-          if [ -d build/Web ]; then cp -r build/Web/. public/; fi
-          if [ -d build/web ]; then cp -r build/web/. public/; fi
-          touch public/.nojekyll
-          ls -la public
+          # firebelley/godot-export drops files under build/<preset_name>/
+          # regardless of the export_path in export_presets.cfg — preset name
+          # is "Web", so files end up at build/Web/. Find the real location
+          # robustly and copy it (not its parent) to ./site.
+          export_dir=$(find build -maxdepth 2 -type f -name index.html -printf '%h\n' | head -n1)
+          echo "Found Godot export at: $export_dir"
+          test -n "$export_dir" || (echo "No index.html under build/"; exit 1)
+          rm -rf site && mkdir -p site
+          cp -a "$export_dir"/. site/
+          touch site/.nojekyll
+          ls -la site
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./public
+          path: site
 
   deploy:
     name: Publish to GitHub Pages
