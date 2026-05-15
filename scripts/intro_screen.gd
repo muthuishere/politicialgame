@@ -21,8 +21,17 @@ func _build() -> void:
 	margin.add_theme_constant_override("margin_bottom", 60)
 	add_child(margin)
 
+	# Letter + cards together are taller than a typical browser viewport.
+	# Wrap in a ScrollContainer so the canvas can scroll internally instead
+	# of leaving the "Choose this start" buttons stranded off-screen.
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	margin.add_child(scroll)
+
 	var center := CenterContainer.new()
-	margin.add_child(center)
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(center)
 
 	var col := VBoxContainer.new()
 	col.custom_minimum_size.x = 720

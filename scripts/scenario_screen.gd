@@ -279,7 +279,10 @@ func _show_consequence(choice: Dictionary, effects: Dictionary) -> void:
 	v.add_child(UI.make_spacer(Palette.SP_SM))
 
 	var cont := UI.make_button("Continue", "primary")
-	cont.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/house_hub.tscn"))
+	cont.pressed.connect(func():
+		var ret := get_tree().get_meta("return_scene", "res://scenes/ward.tscn")
+		get_tree().change_scene_to_file(ret)
+	)
 	v.add_child(cont)
 
 	# Tween the panel in

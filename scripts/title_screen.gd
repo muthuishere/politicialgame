@@ -86,8 +86,12 @@ func _build() -> void:
 	footer_box.add_child(footer)
 
 func _on_new_game() -> void:
-	get_tree().change_scene_to_file("res://scenes/intro.tscn")
+	# Skip the text intro — drop straight into the walkable ward with
+	# default "modest" background. Background choice can move in-world
+	# later.
+	GameState.reset_for_new_game("modest")
+	get_tree().change_scene_to_file("res://scenes/ward.tscn")
 
 func _on_continue() -> void:
 	if GameState.load_game():
-		get_tree().change_scene_to_file("res://scenes/house_hub.tscn")
+		get_tree().change_scene_to_file("res://scenes/ward.tscn")
