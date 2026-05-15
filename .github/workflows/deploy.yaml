@@ -40,13 +40,18 @@ jobs:
       - name: Find the Godot export and stage as the Pages site root
         run: |
           set -x
-          # firebelley/godot-export drops files under build/<preset_name>/
-          # regardless of the export_path in export_presets.cfg — preset name
-          # is "Web", so files end up at build/Web/. Find the real location
-          # robustly and copy it (not its parent) to ./site.
-          export_dir=$(find build -maxdepth 2 -type f -name index.html -printf '%h\n' | head -n1)
+          # firebelley/godot-export emits build files somewhere under the
+          # workspace — the exact subdir depends on the action version /
+          # preset name. Locate index.html, but skip any HTML files this
+          # repo ships in source (none today, but be defensive).
+          export_dir=$(find . -type f -name index.html \
+            -not -path './.git/*' -not -path './assets/*' -not -path './scripts/*' \
+            -printf '%h\n' | head -n1)
           echo "Found Godot export at: $export_dir"
-          test -n "$export_dir" || (echo "No index.html under build/"; exit 1)
+          test -n "$export_dir" || { echo "No index.html anywhere in workspace"; exit 1; }
+          # Verify it's really the Godot build (wasm sibling)
+          ls -la "$export_dir"
+          test -f "$export_dir/index.wasm" || { echo "Found index.html but no index.wasm next to it"; exit 1; }
           rm -rf site && mkdir -p site
           cp -a "$export_dir"/. site/
           touch site/.nojekyll
