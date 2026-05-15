@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F4E4C6"/>
+      <stop offset="1" stop-color="#E8C896"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="20" fill="url(#bg)"/>
+  <!-- stylised scale of justice + lotus motif -->
+  <g stroke="#3D2817" stroke-width="3" fill="none" stroke-linecap="round">
+    <line x1="64" y1="28" x2="64" y2="86"/>
+    <line x1="34" y1="46" x2="94" y2="46"/>
+    <path d="M28 46 q6 18 12 0" fill="#C97B5C" stroke="#3D2817"/>
+    <path d="M88 46 q6 18 12 0" fill="#7A8450" stroke="#3D2817"/>
+    <circle cx="64" cy="28" r="4" fill="#E89F4E" stroke="#3D2817"/>
+    <path d="M48 96 q16 -12 32 0" stroke="#3D2817"/>
+    <path d="M44 96 q20 -18 40 0" stroke="#3D2817"/>
+  </g>
+</svg>

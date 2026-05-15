@@ -1,0 +1,326 @@
+{
+  "_doc": "Salamia scenario database — spike build. State: Aryavarta. Phases: volunteer, councillor. Effects keys map directly to GameState properties. requires{} is checked before a scenario can appear; choices may also set 'unlocks' (queues a follow-up) or 'flag' (sets a persistent flag). Numbers are tuned for ~3-5 volunteer scenarios before councillor election becomes available (local_trust >= 30).",
+  "scenarios": [
+    {
+      "id": "vol_tap",
+      "phase": "volunteer",
+      "state": "aryavarta",
+      "title": "The Leaking Tap",
+      "speaker": "Mrs. Devi, neighbour",
+      "scene_icon": "tap",
+      "narrative": "It has been leaking for two weeks now. Mrs. Devi wipes her hands on her dupatta and lists the calls she made to the municipality: three of them, three different officers, the same answer — \"submit an application, sir.\" The water bill keeps coming, full price. Her son was up all night because of the dripping.\n\nShe looks at you — really looks at you. The grandson of the old teacher. The one who studied in the city. The one who, for some reason, came back.\n\n\"You always cared about these things. Will you try?\"",
+      "choices": [
+        {
+          "label": "Pay a plumber and be done with it (₹800)",
+          "requires": {"min_finances": 800},
+          "effects": {"integrity": 4, "empathy": 8, "local_trust": 10, "finances": -800},
+          "followup": "By evening the tap is fixed. Mrs. Devi presses a steel tiffin of besan ladoo into your hand. Word travels three streets before sunset."
+        },
+        {
+          "label": "Draft a petition with the neighbours, submit it together",
+          "effects": {"empathy": 6, "local_trust": 14, "family_harmony": -2, "inner_peace": 4},
+          "followup": "Twenty-two signatures by Saturday. The petition reaches the ward office on Monday. The tap is fixed on Wednesday — but more importantly, the neighbourhood discovers it can move as one body.",
+          "unlocks": ["vol_garbage"]
+        },
+        {
+          "label": "\"It really isn't my place to interfere\"",
+          "effects": {"integrity": -4, "empathy": -10, "local_trust": -12, "inner_peace": -4},
+          "followup": "She nods slowly, as if she expected nothing else, and walks back across the lane. You hear her son crying through the open window that night."
+        },
+        {
+          "label": "Promise to look into it — and let it slide",
+          "effects": {"integrity": -6, "local_trust": -6, "inner_peace": -6},
+          "followup": "Three days. Four days. A week. You see Mrs. Devi at the vegetable cart and cross to the other side of the road. She notices. So does the vegetable seller.",
+          "flag": "early_evasion"
+        }
+      ]
+    },
+
+    {
+      "id": "vol_garbage",
+      "phase": "volunteer",
+      "state": "aryavarta",
+      "title": "The Garbage at Tilak Crossing",
+      "speaker": "Bashir-bhai, retired postmaster",
+      "scene_icon": "smoke",
+      "narrative": "The corner of Tilak Road and Old Bazaar Lane has been a garbage dump for three years. The municipality calls it \"outside their jurisdiction\" — in truth it sits between two ward boundaries, and neither councillor wants to spend on someone else's voters. Children play next to it. Two of them got dengue last monsoon.\n\nToday, Bashir-bhai — eighty-two years old, retired postmaster — has dragged a plastic stool to the edge of the pile and announced he will not move until something is done. A small crowd is forming. A stringer from the local paper is unzipping a camera bag.",
+      "choices": [
+        {
+          "label": "Sit down beside him",
+          "effects": {"integrity": 10, "empathy": 10, "local_trust": 18, "media_reputation": 8, "family_harmony": -5, "inner_peace": 4},
+          "followup": "You sit. By 5 PM there are forty of you. By 7 PM the sub-divisional magistrate arrives with two trucks. Bashir-bhai refuses to leave until they actually start loading. The photograph runs in the next morning's edition.",
+          "flag": "tilak_sit_in"
+        },
+        {
+          "label": "Organise a community clean-up yourself (₹3,000 for trucks)",
+          "requires": {"min_finances": 3000},
+          "effects": {"empathy": 6, "local_trust": 12, "inner_peace": 6, "finances": -3000},
+          "followup": "You rent two tempos and call in favours. By dusk the corner is clear. The municipality watches from across the road and does nothing. Some of the ward learns that you spend your own money on the ward's problems. Most of them learn that the municipality didn't."
+        },
+        {
+          "label": "Call your AJM contact — let the ruling party take credit",
+          "requires": {"flag": "ajm_aligned"},
+          "effects": {"party_loyalty": 14, "local_trust": 4, "integrity": -4},
+          "followup": "Two municipal trucks arrive within the hour, flanked by AJM banners. The garbage is cleared. The credit is taken. Bashir-bhai looks at you and says nothing."
+        },
+        {
+          "label": "Quietly bribe the sanitary inspector (₹5,000)",
+          "requires": {"min_finances": 5000},
+          "effects": {"local_trust": 10, "integrity": -20, "inner_peace": -12, "finances": -5000},
+          "followup": "The corner is clean by morning. You feel sick about it for a week. The inspector now knows you are someone who pays.",
+          "flag": "paid_inspector"
+        }
+      ]
+    },
+
+    {
+      "id": "vol_land",
+      "phase": "volunteer",
+      "state": "aryavarta",
+      "title": "The Land Dispute",
+      "speaker": "Both families, simultaneously",
+      "scene_icon": "scales",
+      "narrative": "Two families in your lane claim the same small plot. The Yadavs, lower-caste, have lived there for twenty years — no papers, only the smoothness of the threshold worn down by their feet. The Tiwaris, upper-caste, arrived last month waving a document that looks freshly printed. The notary's stamp is the wrong colour.\n\nBoth families come to your house, on the same evening, ten minutes apart. The Tiwaris bring sweets. The Yadavs bring nothing because they have nothing.\n\nThe lane is watching to see what you do.",
+      "choices": [
+        {
+          "label": "Stand publicly with the Yadav family",
+          "effects": {"integrity": 8, "empathy": 12, "local_trust": 16, "family_harmony": -8, "inner_peace": 5, "media_reputation": 4},
+          "followup": "Word reaches the Tiwaris' uncle, who owns the trucks that carry grain from this district. He stops by to remind your father that grain is, after all, perishable. Your father does not look at you over dinner. But the Yadavs sleep in their home.",
+          "flag": "stood_with_yadavs"
+        },
+        {
+          "label": "Quietly advise the Yadavs to leave — \"safer for them\"",
+          "effects": {"integrity": -18, "empathy": -12, "local_trust": -12, "inner_peace": -12},
+          "followup": "They leave within a week. The Tiwaris move in. You tell yourself it was the practical choice. You will tell yourself this many times.",
+          "flag": "abandoned_yadavs"
+        },
+        {
+          "label": "Hire a lawyer to verify the document (₹2,000)",
+          "requires": {"min_finances": 2000},
+          "effects": {"integrity": 10, "empathy": 6, "local_trust": 12, "inner_peace": 5, "finances": -2000, "reform_progress": 2},
+          "followup": "The lawyer confirms it: the stamp is forged, the notary number doesn't exist. The Tiwaris withdraw quietly when shown the report. You learn something useful — paperwork can be fought with paperwork, if you have the time and the rupees.",
+          "unlocks": ["vol_recruiter"]
+        },
+        {
+          "label": "\"This is between them. I won't take sides.\"",
+          "effects": {"integrity": -8, "empathy": -10, "local_trust": -16, "inner_peace": -8},
+          "followup": "Neutrality, in a lane where one side has trucks and the other has nothing, is a side. The Yadavs understand this before you do."
+        }
+      ]
+    },
+
+    {
+      "id": "vol_widow",
+      "phase": "volunteer",
+      "state": "aryavarta",
+      "title": "The Pension That Never Came",
+      "speaker": "Lakshmi-bai, widow",
+      "scene_icon": "file",
+      "narrative": "Lakshmi-bai has not received her widow's pension — ₹3,000 a month, by law — for eight months. She has the receipts. She has the application. She has, by now, a thick file held together with two rubber bands.\n\nThe clerk at the pension office tells her there is \"a small processing fee.\" Two thousand rupees. She does not have two thousand rupees. If she had two thousand rupees she would not need the pension.\n\nHer son-in-law brings her to your door because someone in the lane said you helped the Devis with their tap.",
+      "choices": [
+        {
+          "label": "Accompany her tomorrow and confront the clerk publicly",
+          "effects": {"integrity": 10, "empathy": 10, "local_trust": 14, "inner_peace": 6, "media_reputation": 6},
+          "followup": "You go. You ask, loudly, for the rule book that authorises a processing fee. The clerk has no rule book. His supervisor appears. By the end of the week, Lakshmi-bai's eight months of pension are deposited in a lump sum. The clerk now hates you. So does his cousin in the revenue office.",
+          "flag": "clerk_grudge",
+          "unlocks": ["vol_recruiter"]
+        },
+        {
+          "label": "Pay the bribe quietly to unblock her pension (₹2,000)",
+          "requires": {"min_finances": 2000},
+          "effects": {"empathy": 4, "local_trust": 6, "integrity": -14, "inner_peace": -8, "finances": -2000},
+          "followup": "The pension starts flowing within a week. Lakshmi-bai blesses you a hundred times. The clerk smiles at you now when you walk past. You discover that, once you have paid, paying again is easier.",
+          "flag": "paid_clerk"
+        },
+        {
+          "label": "Write to the district magistrate — slow but proper",
+          "effects": {"integrity": 6, "reform_progress": 3, "inner_peace": 2},
+          "followup": "Six weeks later, a circular goes out from the DM's office reminding all pension officers that processing fees are illegal. Lakshmi-bai's case is one of forty-three suddenly resolved. She does not know your name. But the system shifted a millimetre."
+        },
+        {
+          "label": "Tell her to be patient — \"the system works eventually\"",
+          "effects": {"empathy": -14, "local_trust": -18, "inner_peace": -8},
+          "followup": "She says nothing. She gathers her file. Her son-in-law looks at you the way men look at someone they have just decided not to vote for."
+        }
+      ]
+    },
+
+    {
+      "id": "vol_recruiter",
+      "phase": "volunteer",
+      "state": "aryavarta",
+      "title": "A Man With a Watch",
+      "speaker": "Mr. Mishra, party scout",
+      "scene_icon": "card",
+      "narrative": "Mr. Mishra has been watching you. He represents the Aryavarta Janata Manch — the AJM, the dominant party in this region for two decades. He is a polite man with an expensive watch and the slow, considered speech of someone who has not been interrupted in a long time.\n\nHe takes tea on your veranda. He does not bring up the tap, or the garbage, or the widow. He talks about your grandmother. He talks about the weather. Then, casually:\n\n\"We need young blood. Real workers. The ward ticket is yours for the next election — if you want it. Just say the word.\"\n\nHe does not mention the conditions yet. He does not need to.",
+      "choices": [
+        {
+          "label": "Accept the AJM ticket",
+          "effects": {"party_loyalty": 28, "coalition_strength": 18, "integrity": -4, "media_reputation": 4},
+          "followup": "Mr. Mishra nods once. \"Good. Good boy.\" Within a week, hoardings with your face appear at three intersections. You did not pay for them. You are not sure you wanted them. But your name is now on a wall.",
+          "flag": "ajm_aligned"
+        },
+        {
+          "label": "Counter-offer: I'll campaign with you but stay independent",
+          "effects": {"party_loyalty": 10, "integrity": 8, "coalition_strength": 8, "media_reputation": 6},
+          "followup": "Mr. Mishra raises an eyebrow for the first time all evening. \"An unusual proposal,\" he says. \"We will see.\" The hoardings do not appear. But neither does open opposition. You have, somehow, bought yourself room.",
+          "flag": "ajm_loose"
+        },
+        {
+          "label": "Decline politely. Approach the rival party (Bharat Lok Sabha) instead",
+          "effects": {"party_loyalty": 18, "coalition_strength": 10, "media_reputation": 8, "integrity": 4},
+          "followup": "The BLS receives you with cautious warmth. They are hungrier than the AJM, and angrier, and less disciplined. Their state secretary tells you, over watery tea, that the time has come for new faces. He looks like he has said this many times.",
+          "flag": "bls_aligned"
+        },
+        {
+          "label": "Decline both. Run as an independent.",
+          "effects": {"integrity": 16, "local_trust": 8, "inner_peace": 6, "party_loyalty": -10},
+          "followup": "Mr. Mishra finishes his tea, sets the cup down, and says: \"You are an interesting young person. We will speak again. Probably sooner than you think.\" The election, you understand, will now be uphill in every direction.",
+          "flag": "independent"
+        }
+      ]
+    },
+
+    {
+      "id": "coun_first_budget",
+      "phase": "councillor",
+      "state": "aryavarta",
+      "title": "Your First Budget",
+      "speaker": "Deputy Mayor Khurana",
+      "scene_icon": "ledger",
+      "narrative": "Your first ward budget meeting. The ledger in front of you is short — a little under ₹40 lakh for the year, for thirty-eight thousand people. Khurana, the deputy mayor, walks you through how this is \"traditionally\" split: roads (40%, mostly to one contractor), streetlights (15%), \"contingencies\" (25% — undefined), salaries (15%), and a remaining 5% for everything else: schools, parks, sanitation, healthcare.\n\nHe smiles. \"This is the framework. We don't usually have new councillors propose changes in their first quarter.\"",
+      "choices": [
+        {
+          "label": "Accept the framework. Earn goodwill, push reform next year.",
+          "effects": {"party_loyalty": 12, "coalition_strength": 10, "integrity": -6, "inner_peace": -4},
+          "followup": "Khurana approves heartily. You sign. The 25% \"contingencies\" line goes where it has always gone. You make a quiet note in your own file."
+        },
+        {
+          "label": "Propose itemising the contingencies line — full transparency",
+          "effects": {"integrity": 14, "reform_progress": 10, "media_reputation": 10, "party_loyalty": -14, "coalition_strength": -6},
+          "followup": "The room cools by ten degrees. Khurana says, very politely, that this is \"a conversation for later.\" But two other councillors — quiet ones, watching — meet your eyes briefly across the table. Something has started.",
+          "flag": "transparency_pushed"
+        },
+        {
+          "label": "Negotiate: support the framework in return for doubled school funds",
+          "effects": {"party_loyalty": 6, "coalition_strength": 12, "empathy": 6, "reform_progress": 4, "integrity": 2},
+          "followup": "Khurana laughs, then thinks, then nods. School allocation jumps from 1% to 2% of the budget. A tiny victory. But the school roof will, this year, not leak."
+        },
+        {
+          "label": "Walk out and call a press conference",
+          "requires": {"media_reputation": 55},
+          "effects": {"integrity": 18, "media_reputation": 18, "reform_progress": 12, "party_loyalty": -30, "coalition_strength": -20, "family_harmony": -8, "inner_peace": -10},
+          "followup": "The headline runs the next morning: NEW COUNCILLOR REFUSES \"CONTINGENCIES\" CULTURE. You are now famous in the ward and despised in the party office. Mr. Mishra requests a meeting. He is not smiling.",
+          "flag": "press_conference"
+        }
+      ]
+    },
+
+    {
+      "id": "coun_gst_report",
+      "phase": "councillor",
+      "state": "aryavarta",
+      "title": "The Clerk's Envelope",
+      "speaker": "An anonymous clerk",
+      "scene_icon": "envelope",
+      "narrative": "A brown envelope, slipped under your office door at 7:47 AM. No name. Inside: a state finance department printout, two pages, photocopied at an angle.\n\nLast year your ward generated ₹15 crore in National Sales Tax. The state returned ₹30 lakh. Two per cent. The remaining 98% went up the chain and never came back.\n\nA Post-it note on the second page, in shaky handwriting: \"Do something. Or don't. But know.\"",
+      "choices": [
+        {
+          "label": "Release the report to the press immediately",
+          "effects": {"integrity": 16, "local_trust": 22, "inner_peace": 8, "family_harmony": -10, "party_loyalty": -28, "media_reputation": 22, "reform_progress": 18},
+          "followup": "By Thursday it is the lead story in the state edition. By Friday three other councillors have called you. By Saturday a senior MLA has hinted, on television, that perhaps a state-level review of devolution is \"timely.\" By Sunday someone is following your car.",
+          "flag": "gst_published"
+        },
+        {
+          "label": "Take it privately to the state finance minister — negotiate",
+          "effects": {"party_loyalty": 12, "coalition_strength": 12, "reform_progress": 6, "integrity": -8, "local_trust": -4, "inner_peace": -6},
+          "followup": "The minister thanks you for your discretion. The ward's share is quietly raised from 2% to 4% the following quarter. The report is shredded. You are, for now, on the list of people who can be trusted with envelopes.",
+          "flag": "gst_private_deal"
+        },
+        {
+          "label": "Hold the report. Wait for the right moment.",
+          "effects": {"inner_peace": -6, "reform_progress": 2},
+          "followup": "You lock the envelope in your grandmother's old steel almirah. You think about it every morning. The right moment, you tell yourself, will arrive.",
+          "flag": "gst_held",
+          "unlocks": ["coun_vendor_protest"]
+        },
+        {
+          "label": "Sell the report to the BLS opposition (₹1,00,000)",
+          "requires": {"not_flag": "bls_aligned"},
+          "effects": {"integrity": -26, "inner_peace": -22, "party_loyalty": -36, "media_reputation": -10, "local_trust": -8, "finances": 100000},
+          "followup": "The opposition uses the report on Tuesday. Everyone in the state assembly knows where it came from by Thursday. The cheque cleared on Wednesday. You are no longer welcome at AJM functions, and the BLS does not invite you to theirs either. The almirah is empty."
+        }
+      ]
+    },
+
+    {
+      "id": "coun_road_tender",
+      "phase": "councillor",
+      "state": "aryavarta",
+      "title": "The Road Tender",
+      "speaker": "Deputy Mayor Khurana, again",
+      "scene_icon": "road",
+      "narrative": "The ward's main road needs resurfacing. Three sealed bids on Khurana's desk:\n\n  •  ₹40 lakh — Singh Constructions. Top quality, twenty-year reputation.\n  •  ₹25 lakh — Khurana Brothers (Pvt) Ltd. Run by the deputy mayor's brother-in-law. Quality decent. Margins, presumably, generous.\n  •  ₹18 lakh — Ambedkar Infra. New firm, owner is Sunita Wagh — a Dalit woman trying to break into a contractor sector that has, for a hundred and twenty years, broken women like her.\n\nKhurana has already made it clear which bid you are expected to second. A discreet \"thank you\" of ₹2 lakh has been mentioned in the phrasing of people who do not say things directly.",
+      "choices": [
+        {
+          "label": "Second the ₹40 lakh bid — quality first",
+          "effects": {"integrity": 14, "reform_progress": 6, "party_loyalty": -16, "coalition_strength": -10},
+          "followup": "The road, when laid, will last twenty years. The ward will not need to vote on it again until your grandchildren are grown. Khurana does not speak to you for a month."
+        },
+        {
+          "label": "Second Khurana's bid. Pocket the ₹2 lakh.",
+          "effects": {"integrity": -28, "inner_peace": -18, "party_loyalty": 18, "coalition_strength": 12, "finances": 200000},
+          "followup": "The money arrives in a brown packet via your driver's cousin. The road, when laid, will need to be redone in four years. You will not be the one redoing it. You hope.",
+          "flag": "took_kickback"
+        },
+        {
+          "label": "Second Ambedkar Infra — the new firm",
+          "effects": {"empathy": 12, "integrity": 10, "local_trust": 14, "reform_progress": 10, "coalition_strength": -14, "party_loyalty": -10, "media_reputation": 6},
+          "followup": "Sunita Wagh comes to your office to thank you. She does not cry. She says, very evenly: \"We will not embarrass you.\" Her crew lays the road in eleven weeks. It is, to everyone's quiet surprise, excellent."
+        },
+        {
+          "label": "Abstain and call for a forensic audit of all three bids",
+          "requires": {"reform_progress": 15},
+          "effects": {"integrity": 22, "inner_peace": 10, "media_reputation": 18, "reform_progress": 12, "party_loyalty": -34, "coalition_strength": -22},
+          "followup": "The audit takes four months. Two of the three bids are found to be coordinated. The contract is rebid. Khurana, in the meantime, has begun referring to you as \"the auditor\" with a smile that has no warmth in it.",
+          "flag": "forensic_audit"
+        }
+      ]
+    },
+
+    {
+      "id": "coun_vendor_protest",
+      "phase": "councillor",
+      "state": "aryavarta",
+      "title": "The Vendors at Chowk",
+      "speaker": "Three hundred street vendors",
+      "scene_icon": "crowd",
+      "narrative": "The city's \"Modernisation Authority\" has issued eviction notices to every street vendor in Sardar Chowk — three hundred and twelve families, by the union's count. The land is being cleared for a private mall. Compensation is offered: ₹15,000 per family, one-time, no relocation.\n\nThe vendors have blocked the chowk since dawn. The police are arriving in numbers. Your party — whichever party you are now in — has supported the mall. Your voters, however, are largely these vendors.\n\nThere is a megaphone on the back of a tempo and someone is shouting your name.",
+      "choices": [
+        {
+          "label": "Climb onto the tempo. Stand with them physically.",
+          "effects": {"integrity": 20, "empathy": 16, "local_trust": 26, "media_reputation": 18, "family_harmony": -14, "party_loyalty": -38, "inner_peace": 8},
+          "followup": "You take the megaphone. Your voice is shaking. The photograph that runs tomorrow shows you mid-sentence, arm raised, three hundred people behind you. Your spouse does not speak to you that evening. Mr. Mishra speaks to you the next morning. He is very calm, which is much worse than angry.",
+          "flag": "stood_with_vendors"
+        },
+        {
+          "label": "Quietly negotiate with the police chief — delay action by a week",
+          "effects": {"local_trust": 8, "coalition_strength": 6, "integrity": 2, "inner_peace": -4, "reform_progress": 2},
+          "followup": "The eviction is postponed. No one stands on a tempo. The vendors win a week to find new pitches. Nobody knows you did anything. Some weeks this is enough."
+        },
+        {
+          "label": "Side with the developers publicly — \"progress requires sacrifice\"",
+          "effects": {"party_loyalty": 28, "coalition_strength": 20, "integrity": -22, "empathy": -16, "local_trust": -32, "media_reputation": -12, "inner_peace": -14},
+          "followup": "The mall opens in eighteen months. Your name is on the inauguration plaque. The vendors who used to sell tea at the chowk now sell it three kilometres away, where there are no customers. You do not visit the chowk much anymore."
+        },
+        {
+          "label": "Propose a hybrid: licensed vendor zones inside the redevelopment",
+          "requires": {"coalition_strength": 25},
+          "effects": {"integrity": 8, "empathy": 8, "local_trust": 14, "reform_progress": 14, "coalition_strength": 14, "media_reputation": 10, "party_loyalty": -6},
+          "followup": "It takes eleven drafts. Sixty-four of the original three hundred and twelve vendors are formally licensed for the new chowk plaza. Not enough. More than nothing. The Modernisation Authority calls it \"a model.\" The union calls it \"a beginning.\" Both, in their way, are right.",
+          "flag": "licensed_zones"
+        }
+      ]
+    }
+  ]
+}
