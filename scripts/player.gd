@@ -17,6 +17,16 @@ var facing := Vector2(0, 1)
 func _ready() -> void:
 	_build_sprite()
 	add_to_group("player")
+	# If a door warped us here, jump to the requested spawn marker and clear
+	# the meta so subsequent scene changes don't reuse a stale value.
+	var marker_name: String = get_tree().get_meta("spawn_marker", "")
+	if marker_name != "":
+		var scene_root := get_tree().current_scene
+		if scene_root != null:
+			var marker := scene_root.find_child(marker_name, true, false)
+			if marker is Node2D:
+				global_position = (marker as Node2D).global_position
+		get_tree().set_meta("spawn_marker", "")
 
 func _physics_process(delta: float) -> void:
 	var dir := Vector2(

@@ -30,6 +30,7 @@ func _ready() -> void:
 	_paint_ground()
 	_paint_roads()
 	_paint_buildings()
+	_place_doors()
 	_position_player()
 	_position_npcs()
 
@@ -76,8 +77,34 @@ func _place_tile(path: String, grid: Vector2, y_offset: int) -> void:
 	world.add_child(s)
 
 func _position_player() -> void:
+	# Fallback spawn for a fresh load. If the player arrived through a door
+	# (player.gd already moved them to a marker), leave them where they are.
 	var player: Node2D = $Player
+	if player.position != Vector2.ZERO:
+		return
 	player.position = Iso.grid_to_screen(Vector2(GRID_W * 0.5, GRID_H * 0.5 + 1))
+
+func _place_doors() -> void:
+	# Entry doors into the two interior scenes. The matching return markers
+	# (HouseReturn, OfficeReturn) are declared statically in ward.tscn so
+	# they exist before Player._ready runs and tries to find them.
+	_spawn_door(
+		Vector2(2, 2),                                # next to the house cluster
+		"res://scenes/house_interior.tscn",
+		"DoorIn",
+	)
+	_spawn_door(
+		Vector2(10, 2),                               # near the office cluster
+		"res://scenes/office_interior.tscn",
+		"DoorIn",
+	)
+
+func _spawn_door(grid: Vector2, target_scene: String, target_marker: String) -> void:
+	var door := preload("res://scenes/door.tscn").instantiate()
+	door.target_scene = target_scene
+	door.target_marker = target_marker
+	door.position = Iso.grid_to_screen(grid)
+	entities.add_child(door)
 
 func _position_npcs() -> void:
 	# Three NPCs scattered around the ward — each wired to a phase of the
