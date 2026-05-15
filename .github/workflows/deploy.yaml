@@ -37,17 +37,23 @@ jobs:
           use_preset_export_path: true
           cache: true
 
-      - name: Ensure GitHub Pages serves the build directly
+      - name: Stage the build into ./public for Pages
         run: |
-          # GitHub Pages by default runs Jekyll, which mangles paths beginning
-          # with underscores (Godot uses none, but belt-and-suspenders).
-          touch build/web/.nojekyll
-          ls -la build/web
+          # The firebelley action exports to build/<preset_name>/ — our preset
+          # is "Web" so files land at build/Web/. Move everything into a flat
+          # ./public/ so Pages serves index.html at the site root.
+          mkdir -p public
+          set -x
+          find build -maxdepth 3 -type d
+          if [ -d build/Web ]; then cp -r build/Web/. public/; fi
+          if [ -d build/web ]; then cp -r build/web/. public/; fi
+          touch public/.nojekyll
+          ls -la public
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./build/web
+          path: ./public
 
   deploy:
     name: Publish to GitHub Pages
